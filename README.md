@@ -9,7 +9,7 @@ O objetivo é mostrar o básico bem feito, com cada ferramenta usada para o que 
 ```
 
 ---
-<img width="736" height="730" alt="illustrator" src="https://github.com/user-attachments/assets/fbfd473a-5302-42dc-bbdb-8610656f61ec" />
+
 
 ## 📂 Estrutura
 

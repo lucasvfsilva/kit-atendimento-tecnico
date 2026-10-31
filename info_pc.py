@@ -2,13 +2,14 @@
 # Uso: python info_pc.py
 import platform
 import shutil
+from pathlib import Path
 
 import psutil
 
 GB = 1024 ** 3
 
 ram = psutil.virtual_memory().total / GB
-disco_livre = shutil.disk_usage("C:\\").free / GB
+disco_livre = shutil.disk_usage(Path.home().anchor).free / GB  # C:\ no Windows, / no Mac e Linux
 nucleos = psutil.cpu_count()
 
 print("=== Configurações do PC ===")

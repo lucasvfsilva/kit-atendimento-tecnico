@@ -1,4 +1,10 @@
+
+
+
+
 # 🖥️ Kit de Atendimento Técnico ao Cliente
+
+https://github.com/user-attachments/assets/d04a1e54-2eb9-4853-8ad1-c64ff92a1c67
 
 Atendimento completo de um cliente fictício, a **Clínica Vida Saudável**, com **3 computadores**: verificar se as máquinas atendem aos requisitos de um sistema e organizar o resultado em **Google Sheets**, **CRM** e **Notion**.
 

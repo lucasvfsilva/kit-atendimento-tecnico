@@ -73,8 +73,8 @@ Funciona em **Windows, Mac e Linux** e **não envia nenhum dado pela internet**:
 
 ## 🔗 Links
 
-- 📊 Planilha (Máquinas + Clientes): *(em breve)*
-- 📘 Resumo no Notion: *(em breve)*
+- 📊 Planilha (Máquinas + Clientes): https://docs.google.com/spreadsheets/d/1BwKYc7cC5Mt5TlXb_jomZOckwe-5UwdqieNHYWcCYh8/edit?gid=2037086700#gid=2037086700
+- 📘 Resumo no Notion: https://app.notion.com/chat?t=40a9f6166c5d802d864c00a970e28434
 
 ---
 

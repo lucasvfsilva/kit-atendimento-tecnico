@@ -1,6 +1,0 @@
-Cliente,Máquina,RAM (GB),Disco livre (GB),Núcleos,Status,Motivo,Sistema,Data
-Clínica Vida Saudável,Recepção-01,4,50,2,❌ Não apto,"RAM insuficiente, Poucos núcleos",Windows 10,03/11/2026
-Clínica Vida Saudável,Consultório-02,16,120,8,✅ Apto,—,Windows 11,03/11/2026
-Mercadinho Bom Preço,Caixa-01,8,15,4,❌ Não apto,Pouco disco,Windows 10,04/11/2026
-Metalúrgica Potiguar,Escritório-01,16,200,12,✅ Apto,—,Windows 11,05/11/2026
-Metalúrgica Potiguar,Escritório-02,8,80,4,✅ Apto,—,Windows 11,05/11/2026

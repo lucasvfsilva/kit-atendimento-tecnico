@@ -1,113 +1,67 @@
-# 🤝 CRM: funil de clientes no Google Sheets
+# 🤝 CRM: aba Clientes
 
-CRM (*Customer Relationship Management*) é onde a empresa acompanha **cada cliente**: em que etapa ele está, o que já foi conversado e qual é o próximo passo.
+Funil de clientes na **mesma planilha** da aba [Máquinas](../google-sheets/), com três automações simples, sem programação.
 
-### Por que montei o CRM no Google Sheets?
-
-- **Fica aberto por link** para quem quiser ver (o HubSpot gratuito não gera link público).
-- **Fica na mesma planilha** do inventário de máquinas, então dá para cruzar os dados: quantas máquinas de cada cliente estão aptas.
-- A **lógica é a mesma** de qualquer CRM do mercado (HubSpot, Pipedrive, RD Station): contatos, funil, etapas e atividades.
+**Por que no Google Sheets?** Fica aberto por link para quem quiser ver e se conecta direto com os dados das máquinas. A lógica é a mesma de qualquer CRM do mercado: empresa, contato, etapa do funil e próximo contato.
 
 ---
 
-## 🧩 Conceitos de CRM
+## Passo a passo
 
-| Conceito | O que é | Onde fica aqui |
-|---|---|---|
-| Empresa / contato | O cliente e a pessoa com quem falo | Aba **Clientes** |
-| Funil (pipeline) | As etapas pelas quais o cliente passa | Coluna **Etapa** |
-| Atividades | Ligações, reuniões, e-mails, visitas | Aba **Histórico** |
-| Follow-up | O próximo contato combinado | Colunas **Próximo contato** e **Próxima ação** |
+**1.** Na planilha **Atendimento – Clientes**, clique no **+** lá embaixo e crie a aba **Clientes**:
 
----
+| | A | B | C | D | E | F |
+|---|---|---|---|---|---|---|
+| 1 | **Empresa** | **Contato** | **Etapa** | **Próximo contato** | **Máquinas aptas** | **Alerta** |
+| 2 | Clínica Vida | Dra. Ana | | 03/11/2026 | | |
+| 3 | Mercadinho Bom Preço | Sr. José | | 10/11/2026 | | |
 
-## 🔄 Etapas do funil
+**2. Etapa com menu suspenso:** selecione **C2:C** → **Dados → Validação de dados → Menu suspenso**, com as opções:
 
-| Etapa | O que significa |
-|---|---|
-| 1. Primeiro contato | Cliente demonstrou interesse |
-| 2. Diagnóstico técnico | Verificando computadores, sistemas e rede |
-| 3. Apresentação da solução | Demonstração do sistema ao cliente |
-| 4. Proposta enviada | Aguardando resposta |
-| 5. Fechado – ganho | Virou cliente ✅ |
-| 6. Fechado – perdido | Não fechou (registrar o motivo) ❌ |
+`Primeiro contato` · `Diagnóstico` · `Proposta enviada` · `Fechado – ganho` · `Fechado – perdido`
 
 ---
 
-## 1. Aba **Clientes**
+## ⚙️ Automação 1: buscar os dados das máquinas sozinho
 
-Dica: importe [`clientes.csv`](clientes.csv) em **Arquivo → Importar → Inserir nova(s) página(s)** e renomeie a aba para **Clientes**.
+Em **E2**, cole e arraste para baixo:
 
-| Col. | Campo | Como preencher |
-|---|---|---|
-| A | Empresa | Texto |
-| B | Contato | Nome da pessoa |
-| C | Telefone / e-mail | Texto |
-| D | Segmento | Clínica, Varejo, Indústria... |
-| E | Etapa | **Menu suspenso** com as 6 etapas acima |
-| F | Último contato | Data |
-| G | Próximo contato | Data |
-| H | Próxima ação | Ex.: "Enviar orçamento de upgrade" |
-| I | Dias sem contato | `=SE(F2=""; ""; HOJE()-F2)` |
-| J | Máquinas | `=CONT.SE(Inventário!A:A; A2)` |
-| K | Máquinas aptas | `=CONT.SES(Inventário!A:A; A2; Inventário!F:F; "✅ Apto")` |
+```
+=CONT.SES(Máquinas!A:A; A2; Máquinas!G:G; "✅ Apto") & " de " & CONT.SE(Máquinas!A:A; A2)
+```
 
-As colunas **J** e **K** puxam os dados da aba [Inventário](../google-sheets/): o CRM mostra a situação técnica de cada cliente sem digitar nada.
+O CRM mostra **"1 de 3"** sem você digitar nada. Se a aba Máquinas mudar, o CRM atualiza.
 
-### Alertas visuais (Formatar → Formatação condicional)
+## ⚙️ Automação 2: alerta de follow-up
 
-| Intervalo | Regra (fórmula personalizada) | Cor | Significado |
-|---|---|---|---|
-| A2:K | `=E($I2>7; ESQUERDA($E2; 1)<>"5"; ESQUERDA($E2; 1)<>"6")` | Vermelho claro | Mais de 7 dias sem contato |
-| A2:K | `=E($G2<>""; $G2<=HOJE())` | Amarelo claro | Tem follow-up para hoje ou atrasado |
+Em **F2**, cole e arraste para baixo:
 
----
+```
+=SE(D2=""; ""; SE(D2<=HOJE(); "⚠️ Contatar hoje"; "Em dia"))
+```
 
-## 2. Aba **Histórico** (atividades)
+## ⚙️ Automação 3: destacar quem precisa de atenção
 
-Toda conversa vira uma linha, para qualquer pessoa do time saber o que foi combinado:
+Selecione **A2:F** → **Formatar → Formatação condicional → A fórmula personalizada é**:
 
-| Data | Empresa | Tipo | Resumo | Próximo passo |
-|---|---|---|---|---|
-| 03/11/2026 | Clínica Vida Saudável | Visita | Diagnóstico de 2 máquinas. Recepção-01 com RAM insuficiente. | Enviar orçamento de upgrade até 07/11 |
+```
+=$F2="⚠️ Contatar hoje"
+```
 
-**Tipo** com menu suspenso: Ligação / Reunião / E-mail / Visita / WhatsApp.
+Fundo **amarelo**. A linha inteira do cliente fica destacada no dia do follow-up.
 
 ---
 
-## 3. Funil no **Painel**
+## ⭐ Bônus: lembrete diário por e-mail
 
-Na aba Painel (veja [google-sheets](../google-sheets/)), adicione:
+O [`codigo/lembrete.gs`](../codigo/lembrete.gs) envia **todo dia de manhã** um e-mail com os clientes que precisam de contato.
 
-| Etapa | Quantidade |
-|---|---|
-| 1. Primeiro contato | `=CONT.SE(Clientes!E2:E; "1. Primeiro contato")` |
-| 2. Diagnóstico técnico | `=CONT.SE(Clientes!E2:E; "2. Diagnóstico técnico")` |
-| ... | (uma linha por etapa) |
-| Taxa de conversão | `=CONT.SE(Clientes!E2:E; "5*") / CONT.VALORES(Clientes!A2:A)` |
-
-**Gráfico:** selecione a tabela → **Inserir → Gráfico → Barras**.
-
----
-
-## 4. (Bônus) Lembrete diário de follow-up por e-mail
-
-O arquivo [`lembrete.gs`](lembrete.gs) envia **todo dia de manhã** um e-mail com os clientes que precisam de contato.
-
-1. Na planilha: **Extensões → Apps Script** → crie um arquivo novo e cole o `lembrete.gs`.
-2. Rode `lembreteFollowUp` uma vez pelo botão **▶ Executar** e autorize.
+1. Na planilha: **Extensões → Apps Script** → apague o conteúdo e cole o `lembrete.gs` → salve.
+2. Selecione a função `lembreteFollowUp` e clique em **▶ Executar** uma vez para autorizar.
+   Se aparecer *"O Google não verificou este app"*: **Avançado → Acessar (não seguro)**. É normal, porque o script é seu.
 3. No menu lateral, **⏰ Acionadores → Adicionar acionador**:
-   função `lembreteFollowUp` · **Baseado no tempo** · **Diário** · **8h às 9h**.
+   função `lembreteFollowUp` · **Baseado no tempo** · tipo **diário** (em inglês, *Day timer*) · **8h às 9h**.
 
 ---
 
-## 📎 E o HubSpot?
-
-Também conheço a lógica de CRMs de mercado. Pratiquei no **HubSpot CRM (gratuito)**, criando o mesmo funil, e fiz o curso da **HubSpot Academy**. Como a estrutura é a mesma (contatos, empresas, negócios, etapas e atividades), consigo me adaptar ao CRM que a empresa usar.
-
----
-
-## ✅ Checklist para o portfólio
-
-- [ ] Prints: aba Clientes com alertas coloridos, aba Histórico, gráfico do funil
-- [ ] Print do e-mail de lembrete recebido
+**Próximo passo:** o resumo do atendimento no [Notion](../notion/).
